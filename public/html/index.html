@@ -1,21 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="Description" content="Enter your description here"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-<link rel="stylesheet" href="assets/css/style.css">
-<script src="../js/index.js"></script>
-<link rel="stylesheet" href="../css/index.css">
-<title>Titration curve generator</title>
-</head>
-<body>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="Description" content="Enter your description here" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="../js/index.js"></script>
+    <title>Titration curve generator</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1 class="top-header">Titration curve generator</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <form>
+                    <!-- We want to collect the acid name, the pKa or the Ka-->
+                    <h2>Enter a new acid into the database</h2>
+                    <div class="mb-3">
+                        <label for="acidName" class="form-label">Enter acid name here:</label>
+                        <input type="text" class="form-control" id="acidName" placeholder="acetic acid">
+                    </div>
+                </form>
+                <!--We need to be able to toggle between pKa and Ka-->
+                <select class="form-select selector" aria-label="pKa or Ka">
+                    <option selected>Are you entering pKa or Ka?</option>
+                    <option value="1">pKa</option>
+                    <option value="2">Ka</option>
+                </select>
+                <!--I need a calculator here including power of ten-->
+                <div class="preview mb-3">
+                    Value will display here
+                </div>
+                <div class="calculator">
+                    <!--Row with 7,8,9, and blank-->
+                    <div class="fourth-row">
+                        <input type="btn" value="7" class="inline-4">
+                        <input type="btn" value="8" class="inline-4">
+                        <input type="btn" value="9" class="inline-4">
+                        <input type="btn" value="^" class="inline-4">
+                    </div>
+                    <!--Row with 4,5,6, - -->
+                    <div class="third-row">
+                        <input type="btn" value="4" class="inline-4">
+                        <input type="btn" value="5" class="inline-4">
+                        <input type="btn" value="6" class="inline-4">
+                        <input type="btn" value="-" class="inline-4">
+                    </div>
+                    <!--Row with 1,2,3, and *-->
+                    <div class="second-row">
+                        <input type="btn" value="1" class="inline-4">
+                        <input type="btn" value="2" class="inline-4">
+                        <input type="btn" value="3" class="inline-4">
+                        <input type="btn" value="*" class="inline-4">
+                    </div>
+                    <!--Bottom row with zero, decimal, and backspace-->
+                    <div class="first-row">
+                        <input type="btn" value="0" class="small">
+                        <input type="btn" value="." class="small">
+                        <input type="btn" value="Del" class="small">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <h2>Form to generate titration curve will go here</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1>Titration curve will be generated here</h1>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
 </body>
+
 </html>

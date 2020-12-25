@@ -45,7 +45,7 @@
                     Value will display here
                 </div>
                 <div class="calculator">
-                    <!--Row with 7,8,9, and blank-->
+                    <!--Row with 7,8,9, and ^ and blank-->
                     <div class="fourth-row">
                         <input type="btn" value="7" class="inline-4">
                         <input type="btn" value="8" class="inline-4">
@@ -73,9 +73,49 @@
                         <input type="btn" value="Del" class="small">
                     </div>
                 </div>
+                <input class="btn btn-primary submit" type="submit" value="Submit">
             </div>
             <div class="col-md-8">
-                <h2>Form to generate titration curve will go here</h2>
+                <h2>Enter your reaction conditions to generate your titration curve:</h2>
+                <!--User must enter acid name, [HA], [OH^-], increment, and end volume-->
+                <!--First to select the acid - these will be dynamically chosen from db and these are placeholders-->
+                <div class="input-group mb-3">
+                    <select class="form-select form-select-lg mb-3">
+                        <option selected>Choose your weak acid</option>
+                        <option value="1">Acetic acid</option>
+                        <option value="2">Phosphoric acid</option>
+                        <option value="3">Carbonic acid</option>
+                    </select>
+                </div>
+                <!--User must then select a concentration of [HA] - we should validate that the concentration must be less than a certain value-->
+                <div class="input-group mb-3">
+                    <label for="concentration" class="form-label">Your [HA]</label>
+                    <input type="text" class="form-control" aria-label="conc-whole">
+                    <span class="input-group-text">*10^</span>
+                    <input type="text" class="form-control" aria-label="conc-powerot">
+                </div>
+                <div class="input-group mb-3">
+                    <label for="concentration" class="form-label">Your [OH^-]</label>
+                    <input type="text" class="form-control" aria-label="conc-whole">
+                    <span class="input-group-text">*10^</span>
+                    <input type="text" class="form-control" aria-label="conc-powerot">
+                </div>
+                <div class="input-group mb-3">
+                    <select class="form-select form-select-lg mb-3">
+                        <option selected>What are the volume increments for your base?</option>
+                        <option value="1">0.01 mL</option>
+                        <option value="2">0.05 mL</option>
+                        <option value="3">0.10 mL</option>
+                        <option value="4">0.50 mL</option>
+                        <option value="5">1.00 mL</option>
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <label for="final-volume" class="form-label">Final volume added of base:</label>
+                    <input type="text" class="form-control" aria-label="conc-whole">
+                    <span class="input-group-text">mL base added</span>
+                </div>
+                <input class="btn btn-primary submit" type="submit" value="Submit">
             </div>
         </div>
     </div>

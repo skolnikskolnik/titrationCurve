@@ -30,7 +30,9 @@
                     <!-- We want to collect the acid name, the pKa or the Ka-->
                     <h2>Enter a new acid into the database</h2>
                     <div class="mb-3">
-                        <label for="acidName" class="form-label">Enter acid name here:</label>
+                        <p>Enter acid name here:</p>
+                    </div>
+                    <div class="mb-3">
                         <input type="text" class="form-control" id="acidName" placeholder="acetic acid">
                     </div>
                 </form>
@@ -75,12 +77,14 @@
                 </div>
                 <input class="btn btn-primary submit" type="submit" value="Submit">
             </div>
+
+
             <div class="col-md-8">
                 <h2>Enter your reaction conditions to generate your titration curve:</h2>
                 <!--User must enter acid name, [HA], [OH^-], increment, and end volume-->
                 <!--First to select the acid - these will be dynamically chosen from db and these are placeholders-->
                 <div class="input-group mb-3">
-                    <select class="form-select form-select-lg mb-3">
+                    <select class="form-select form-select-lg mb-3 acids">
                         <option selected>Choose your weak acid</option>
                         <option value="1">Acetic acid</option>
                         <option value="2">Phosphoric acid</option>
@@ -101,7 +105,7 @@
                     <input type="text" class="form-control" aria-label="conc-powerot">
                 </div>
                 <div class="input-group mb-3">
-                    <select class="form-select form-select-lg mb-3">
+                    <select class="form-select form-select-lg mb-3 acids">
                         <option selected>What are the volume increments for your base?</option>
                         <option value="1">0.01 mL</option>
                         <option value="2">0.05 mL</option>
@@ -112,7 +116,7 @@
                 </div>
                 <div class="input-group mb-3">
                     <label for="final-volume" class="form-label">Final volume added of base:</label>
-                    <input type="text" class="form-control" aria-label="conc-whole">
+                    <input type="text" class="form-control input-acid" aria-label="conc-whole">
                     <span class="input-group-text">mL base added</span>
                 </div>
                 <input class="btn btn-primary submit" type="submit" value="Submit">

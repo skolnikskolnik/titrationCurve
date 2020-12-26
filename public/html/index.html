@@ -90,11 +90,8 @@
                 <!--User must enter acid name, [HA], [OH^-], increment, and end volume-->
                 <!--First to select the acid - these will be dynamically chosen from db and these are placeholders-->
                 <div class="input-group mb-3">
-                    <select class="form-select form-select-lg mb-3 acids">
+                    <select class="form-select form-select-lg mb-3" id="acids-from-db">
                         <option selected>Choose your weak acid</option>
-                        <option value="1">Acetic acid</option>
-                        <option value="2">Phosphoric acid</option>
-                        <option value="3">Carbonic acid</option>
                     </select>
                 </div>
                 <!--User must then select a concentration of [HA] - we should validate that the concentration must be less than a certain value-->

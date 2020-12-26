@@ -3,9 +3,27 @@ $(function () {
     const previewEl = $(".preview");
     const acidModal = $("#nameModal");
     const modalDisplay = $("#modalText");
+    const selectAcids = $("#acids-from-db");
 
     let numberString = "";
     let previewElText = "";
+
+    //On start of page we want to get the acid names from the db
+    $.ajax("/acidnames", {
+        type: "GET"
+    }).then(function(data){
+        if(!data){
+            return data;
+        }
+        
+        for(let i=0; i<data.acids.length; i++){
+            let value = i+1;
+            let acidNamePush = data.acids[i].acid_name;
+            
+            selectAcids.append(`<option value="${value}">${acidNamePush}</option>`);
+        }
+
+    })
     //Display what the user enters into the calculator
     $(document).on("click", ".calc-button", function (event) {
         event.preventDefault();
@@ -25,8 +43,6 @@ $(function () {
         previewEl.text(previewElText);
 
     });//Closes on-click event for calculator numbers
-
-
 
     $(document).on("click", ".name-submit", function (event) {
         event.preventDefault();

@@ -6,6 +6,16 @@ const titration = {
         orm.insertOne("acids", cols, vals, function (res) {
             cb(res);
         });
+    },
+    selectAll: function(cb){
+        orm.selectAll("acids", function(res){
+            cb(res);
+        })
+    },
+    selectOneColumn: function(col, cb){
+        orm.selectOneColumn(col, "acids", function(res){
+            cb(res);
+        })
     }
 }
 

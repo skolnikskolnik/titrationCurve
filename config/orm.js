@@ -47,6 +47,15 @@ const orm = {
             cb(result);
         });
     },
+    selectOneColumn: function(col, tableInput, cb){
+        let queryString = `SELECT ${col} FROM ${tableInput};`;
+        connection.query(queryString, function(err,result){
+            if (err){
+                throw err;
+            }
+            cb(result);
+        })
+    },
     //selectWhere
     selectWhere: function (tableInput, col, vals, cb) {
         let queryString = `SELECT * FROM ${tableInput} WHERE ${col} = "${vals}";`;

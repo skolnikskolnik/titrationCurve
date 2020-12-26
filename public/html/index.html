@@ -97,18 +97,18 @@
                 <!--User must then select a concentration of [HA] - we should validate that the concentration must be less than a certain value-->
                 <div class="input-group mb-3">
                     <label for="concentration" class="form-label">Your [HA]</label>
-                    <input type="text" class="form-control" aria-label="conc-whole">
+                    <input type="text" class="form-control" aria-label="conc-whole" id="haWhole">
                     <span class="input-group-text">*10^</span>
-                    <input type="text" class="form-control" aria-label="conc-powerot">
+                    <input type="text" class="form-control" aria-label="conc-powerot" id="haPoT">
                 </div>
                 <div class="input-group mb-3">
                     <label for="concentration" class="form-label">Your [OH^-]</label>
-                    <input type="text" class="form-control" aria-label="conc-whole">
+                    <input type="text" class="form-control" aria-label="conc-whole" id="ohWhole">
                     <span class="input-group-text">*10^</span>
-                    <input type="text" class="form-control" aria-label="conc-powerot">
+                    <input type="text" class="form-control" aria-label="conc-powerot" id="ohPoT">
                 </div>
                 <div class="input-group mb-3">
-                    <select class="form-select form-select-lg mb-3 acids">
+                    <select class="form-select form-select-lg mb-3 acids" id="baseInc">
                         <option selected>What are the volume increments for your base?</option>
                         <option value="1">0.01 mL</option>
                         <option value="2">0.05 mL</option>
@@ -119,10 +119,10 @@
                 </div>
                 <div class="input-group mb-3">
                     <label for="final-volume" class="form-label">Final volume added of base:</label>
-                    <input type="text" class="form-control input-acid" aria-label="conc-whole">
+                    <input type="text" class="form-control input-acid" aria-label="conc-whole" id="baseFinal">
                     <span class="input-group-text">mL base added</span>
                 </div>
-                <input class="btn btn-primary submit" type="submit" data-toggle="modal" data-target="#invalidInput"
+                <input class="btn btn-primary submit titration-submit" type="submit" data-toggle="modal" data-target="#invalidInput"
                     value="Submit">
 
             <!--The following modal pops up if no acid name is entered-->

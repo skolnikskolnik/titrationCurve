@@ -23,9 +23,9 @@ router.post("/newacid/:acidName/:pKa/:Ka", function(req,res){
 
 //Route to get all of the acid names
 router.get("/acidnames", function(req,res){
-    titration.selectOneColumn("acid_name", function(data){
-        res.json({acids:data}); 
-    })
+    titration.selectAll(function(data){
+        res.json({titrations: data});
+    });
 })
 
 // Export routes for server.js to use.

@@ -11,19 +11,22 @@ $(function () {
     //On start of page we want to get the acid names from the db
     $.ajax("/acidnames", {
         type: "GET"
-    }).then(function(data){
-        if(!data){
+    }).then(function (data) {
+        if (!data) {
             return data;
         }
-        
-        for(let i=0; i<data.acids.length; i++){
-            let value = i+1;
-            let acidNamePush = data.acids[i].acid_name;
-            
-            selectAcids.append(`<option value="${value}">${acidNamePush}</option>`);
+
+        for (let i = 0; i < data.titrations.length; i++) {
+            let value = data.titrations[i].id;
+            let name = data.titrations[i].acid_name;
+
+            selectAcids.append(`<option value="${value}">${name}</option>`);
         }
 
-    })
+
+
+    });
+
     //Display what the user enters into the calculator
     $(document).on("click", ".calc-button", function (event) {
         event.preventDefault();
@@ -44,6 +47,7 @@ $(function () {
 
     });//Closes on-click event for calculator numbers
 
+    //When user hits submit button on entering an acid to the db
     $(document).on("click", ".name-submit", function (event) {
         event.preventDefault();
 
@@ -106,6 +110,64 @@ $(function () {
 
     }); //Closes event listener for submitting the acid name 
 
+    //When a user hits submit button to generate a titration curve
+    $(document).on("click", ".titration-submit", function (event) {
+        event.preventDefault();
+
+        //Gets index of acid from db - will need to get pKa and Ka
+        let acidIndex = selectAcids.val();
+
+        //Need to get [HA]
+        let haWholeNumber = $("#haWhole").val();
+        haWholeNumber = parseInt(haWholeNumber);
+        let haPoT = $("#haPoT").val();
+        let haConc;
+        if (haPoT.includes("-")) {
+            haPoT = haPoT.split("-")[1];
+            haConc = haWholeNumber * Math.pow(10, -1 * haPoT);
+        } else {
+            haConc = haWholeNumber * Math.pow(10, haPoT);
+        }
+        haConc = haConc.toFixed(6);
+
+        //Need to get [OH^-]
+        let ohWholeNumber = $("#ohWhole").val();
+        ohWholeNumber = parseInt(ohWholeNumber);
+        let ohPoT = $("#ohPoT").val();
+        let ohConc;
+        if (ohPoT.includes("-")) {
+            ohPoT = ohPoT.split("-")[1];
+            ohConc = haWholeNumber * Math.pow(10, -1 * ohPoT);
+        } else {
+            ohConc = haWholeNumber * Math.pow(10, ohPoT);
+        }
+        ohConc = ohConc.toFixed(6);
+
+        //Need volume increments for the base
+        let volIndex = $("#baseInc").val();
+        let baseInc;
+        if (volIndex == 1) {
+            baseInc = 0.01;
+        }
+        else if (volIndex == 2) {
+            baseInc = 0.05;
+        }
+        else if (volIndex == 3) {
+            baseInc = 0.10;
+        }
+        else if (volIndex == 4) {
+            baseInc = 0.5
+        }
+        else if (volIndex == 5) {
+            baseInc = 1;
+        }
+        
+        //Want to get the desired final volume from user
+        let baseFinVol;
+        baseFinVol = $("#baseFinal").val();
+        
+
+    });
 
     //function to store acid in db
     function addAcidToDB(pKa, regKa) {
@@ -118,7 +180,7 @@ $(function () {
             if (isNaN(pKa) || isNaN(regKa)) {
                 //A modal should pop up
                 numberModalFxn();
-            
+
             }
             else {
                 let acidInput = {
@@ -141,22 +203,22 @@ $(function () {
     }
 
     //Displays modal if no valid acid is entered
-    function acidModalFxn(){
+    function acidModalFxn() {
         modalDisplay.text("You must enter a valid acid name");
         acidModal.css("display", "block");
 
-        $(document).on("click", "#acidClose", function(event){
+        $(document).on("click", "#acidClose", function (event) {
             event.preventDefault();
             acidModal.css("display", "none");
         })
     }
 
     //Displays a modal for invalid pKa or Ka values
-    function numberModalFxn(){
+    function numberModalFxn() {
         modalDisplay.text("You must enter a valid pKa or Ka");
         acidModal.css("display", "block");
 
-        $(document).on("click", "#acidClose", function(event){
+        $(document).on("click", "#acidClose", function (event) {
             event.preventDefault();
             acidModal.css("display", "none");
         })

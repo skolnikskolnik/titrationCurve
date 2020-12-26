@@ -28,7 +28,6 @@ $(function () {
 
     $(document).on("click", ".name-submit", function (event) {
         event.preventDefault();
-        event.stopPropagation();
 
         //pKaorKa=1 for pKa and it equals 2 for Ka
         let pKaorKa = $(".pKaorKa").val();
@@ -44,6 +43,7 @@ $(function () {
             regKa = Math.pow(10, (-1 * pKa));
             regKa = regKa.toFixed(6);
 
+            addAcidToDB(pKa, regKa);
         } else if (pKaorKa == 2) {
             //Need to check if regKa has characters in it or not
             regKa = numberString;
@@ -57,6 +57,8 @@ $(function () {
                 pKa = -1 * log10(regKa);
                 pKa = pKa.toFixed(2);
 
+                addAcidToDB(pKa, regKa);
+
             } else if (regKaSplit.length == 2) {
                 let regKaNum = regKaSplit[0];
                 regKaNum = parseInt(regKaNum);
@@ -67,12 +69,24 @@ $(function () {
                 regKa = regKa.toFixed(6);
                 pKa = -1 * log10(regKa);
                 pKa = pKa.toFixed(2);
+
+                addAcidToDB(pKa, regKa);
             }
             else {
                 alert("Invalid input, try again!");
             }
-        }
 
+        }
+        
+
+        //Reset number string to zero/blank
+        numberString = "";
+
+    }); //Closes event listener for submitting the acid name 
+
+
+    //function to store acid in db
+    function addAcidToDB(pKa, regKa){
         let acidName = acidInputEl.val().trim();
 
         let acidInput = {
@@ -81,16 +95,16 @@ $(function () {
             Ka: regKa
         }
 
-        console.log(acidInput);
-
-
-
-        //Reset number string to zero/blank
-        numberString = "";
-
-    }); //Closes event listener for submitting the acid name 
-
-
+        $.ajax(`/newacid/${acidName}/${pKa}/${regKa}`, {
+            type: "POST", 
+            data: JSON.stringify(acidInput),
+            dataType: 'json',
+            contentType: 'application/json'
+        }).then(function(){
+            console.log("test");
+            location.reload();
+        });
+    }
 
     //Function definition for base 10
     function log10(val) {

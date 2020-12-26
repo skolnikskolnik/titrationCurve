@@ -1,6 +1,8 @@
 $(function () {
     const acidInputEl = $("#acidName");
     const previewEl = $(".preview");
+    const acidModal = $("#nameModal");
+    const modalDisplay = $("#modalText");
 
     let numberString = "";
     let previewElText = "";
@@ -94,11 +96,13 @@ $(function () {
         let acidName = acidInputEl.val().trim();
 
         if (acidName.length == 0) {
-            console.log("You must enter a valid name!");
+            acidModalFxn();
         } else {
             //pKa and Ka must both be numbers
             if (isNaN(pKa) || isNaN(regKa)) {
-                console.log("You must enter a valid pKa or Ka!");
+                //A modal should pop up
+                numberModalFxn();
+            
             }
             else {
                 let acidInput = {
@@ -120,7 +124,27 @@ $(function () {
         }//Ends the else statement to validate that a name has been added
     }
 
+    //Displays modal if no valid acid is entered
+    function acidModalFxn(){
+        modalDisplay.text("You must enter a valid acid name");
+        acidModal.css("display", "block");
 
+        $(document).on("click", "#acidClose", function(event){
+            event.preventDefault();
+            acidModal.css("display", "none");
+        })
+    }
+
+    //Displays a modal for invalid pKa or Ka values
+    function numberModalFxn(){
+        modalDisplay.text("You must enter a valid pKa or Ka");
+        acidModal.css("display", "block");
+
+        $(document).on("click", "#acidClose", function(event){
+            event.preventDefault();
+            acidModal.css("display", "none");
+        })
+    }
 
     //Function definition for base 10
     function log10(val) {

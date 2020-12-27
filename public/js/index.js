@@ -8,7 +8,7 @@ $(function () {
     let numberString = "";
     let previewElText = "";
     let initPh;
-    let plotPoints = [];
+    let xyCoordinates = [];
 
     //On start of page we want to get the acid names from the db
     $.ajax("/acidnames", {
@@ -120,7 +120,7 @@ $(function () {
         let acidIndex = selectAcids.val();
 
         //Must confirm that an acid was chosen
-        if(acidIndex =="Choose your weak acid"){
+        if (acidIndex == "Choose your weak acid") {
             modal("titrationInputAcid");
         }
 
@@ -149,9 +149,9 @@ $(function () {
             ohConc = haWholeNumber * Math.pow(10, ohPoT);
         }
         ohConc = ohConc.toFixed(6);
-        
+
         //If either haConc or ohConc are not numbers, then the user must try again
-        if((isNaN(haConc))||(isNaN(ohConc))){
+        if ((isNaN(haConc)) || (isNaN(ohConc))) {
             modal("pKaorKa");
         }
 
@@ -173,35 +173,30 @@ $(function () {
         else if (volIndex == 5) {
             baseInc = 1;
         }
-        else{
+        else {
             modal("baseInc");
         }
-        
+
         //Want to get the desired final volume from user
         let haVolInit;
         haVolInit = $("#acidInitial").val();
         haVolInit = parseFloat(haVolInit);
-        if(isNaN(haVolInit)){
+        if (isNaN(haVolInit)) {
             modal("haInitVol");
         }
 
         let ohFinVol;
         ohFinVol = $("#baseFinal").val();
         ohFinVol = parseFloat(ohFinVol);
-        if(isNaN(ohFinVol)){
+        if (isNaN(ohFinVol)) {
             modal("ohFinVol");
         }
 
         //We have acidIndex, haConc, ohConc, baseInc, haVolInit, ohFinVol
         //First need to get pH of initial solution - need pKa/Ka for this
-        //Clear the object of any past titration curves
-        for(let i=0; i< plotPoints.length; i++){
-            delete plotPoints[i];
-        }
-
         $.ajax(`/acids/${acidIndex}`, {
             type: "GET"
-        }).then(function(data){
+        }).then(function (data) {
             if (!data) {
                 return data;
             }
@@ -209,58 +204,68 @@ $(function () {
             regKa = data[0].Ka;
 
             //Calculate initial pH
-            initPh = -1* log10(Math.pow((regKa*haConc), 0.5));
-            plotPoints.push(initPh);
-            
+            initPh = -1 * log10(Math.pow((regKa * haConc), 0.5));
+            initPh = initPh.toFixed(2);
+            let initialXY = { x: 0, y: initPh };
+            xyCoordinates.push(initialXY);
+
             //Determine # of increments 
-            let numPoints = ohFinVol/baseInc;
+            let numPoints = ohFinVol / baseInc;
 
             //The initial number of moles of acid present
             let molesAcidInit = haConc * haVolInit / 1000;
             molesAcidInit.toFixed(6);
-            
+
 
             //Iterate through each aliquot
-            for(let i=1; i<numPoints; i++){
+            for (let i = 1; i < numPoints; i++) {
                 //Volume of base added
-                let volOHadded = i*baseInc;
+                let volOHadded = i * baseInc;
                 volOHadded = volOHadded.toFixed(2);
-                
+
                 //Moles of base added
-                let molesOHadded = (ohConc*volOHadded)/1000;
+                let molesOHadded = (ohConc * volOHadded) / 1000;
                 molesOHadded = molesOHadded.toFixed(6);
 
                 //Moles acid remaining
                 let molesHAremaining = molesAcidInit - molesOHadded;
                 molesHAremaining.toFixed(6);
-                
+
                 //While molesOH added are less than moles of acid
-                if(molesOHadded < molesAcidInit){
+                if (molesOHadded < molesAcidInit) {
                     //pH is determined by Henderson-Hasselbalch 
-                    let pHarea1 = pKa +log10(molesOHadded/molesHAremaining);
+                    let pHarea1 = pKa + log10(molesOHadded / molesHAremaining);
                     pHarea1 = pHarea1.toFixed(2);
-                    plotPoints.push(pHarea1);
-                } else if (molesOHadded == molesAcidInit){
-                    let Kb = (Math.pow(10, -14))/regKa;
-                    
-                    let pHarea2 = 14 + log10(Math.pow((haConc*Kb),0.5));
+
+                    let xyCoordArea1 = {x : volOHadded, y: pHarea1};
+                    xyCoordinates.push(xyCoordArea1);
+                } else if (molesOHadded == molesAcidInit) {
+                    let Kb = (Math.pow(10, -14)) / regKa;
+
+                    let pHarea2 = 14 + log10(Math.pow((haConc * Kb), 0.5));
                     pHarea2 = pHarea2.toFixed(2);
-                    plotPoints.push(pHarea2);
+
+                    let xyCoordArea2 = {x: volOHadded, y: pHarea2};
+                    xyCoordinates.push(xyCoordArea2);
                 } else {
                     let excessMolesOh = molesOHadded - molesAcidInit;
                     excessMolesOh = excessMolesOh.toFixed(6);
 
                     haVolInit = parseFloat(haVolInit);
                     volOHadded = parseFloat(volOHadded);
-                    let totalVolume = (haVolInit + volOHadded)/1000;
-                    
-                    let pHarea3 = 14 + log10(excessMolesOh/totalVolume);
-                    pHarea3 = pHarea3.toFixed(2);
-                    plotPoints.push(pHarea3);
-                }
-            }
+                    let totalVolume = (haVolInit + volOHadded) / 1000;
 
-            console.log(plotPoints);
+                    let pHarea3 = 14 + log10(excessMolesOh / totalVolume);
+                    pHarea3 = pHarea3.toFixed(2);
+
+                    let xyCoordArea3 = {x: volOHadded, y: pHarea3};
+                    xyCoordinates.push(xyCoordArea3);
+                }
+
+
+            }
+            console.log(xyCoordinates);
+
         })
 
     });
@@ -299,22 +304,22 @@ $(function () {
         }//Ends the else statement to validate that a name has been added
     }
 
-    function modal(type){
+    function modal(type) {
         let displayText;
-        if(type == "acidName"){
+        if (type == "acidName") {
             displayText = "You must enter a valid acid name";
-        } else if(type == "pKaorKa"){
+        } else if (type == "pKaorKa") {
             displayText = "You must enter a valid pKa or Ka";
-        } else if(type == "titrationInputAcid"){
+        } else if (type == "titrationInputAcid") {
             displayText = "You must enter an acid for your titration";
         }
-        else if(type == "haInitVol"){
+        else if (type == "haInitVol") {
             displayText = "You must enter a valid initial volume of HA";
         }
-        else if(type == "ohFinVol"){
+        else if (type == "ohFinVol") {
             displayText = "You must enter a valid final volume of OH^-";
         }
-        else if(type == "baseInc"){
+        else if (type == "baseInc") {
             displayText = "Please choose an increment for the base";
         }
         modalDisplay.text(displayText);

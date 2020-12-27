@@ -4,6 +4,7 @@ $(function () {
     const acidModal = $("#nameModal");
     const modalDisplay = $("#modalText");
     const selectAcids = $("#acids-from-db");
+    const ctx = $("#scatterChart");
 
     let numberString = "";
     let previewElText = "";
@@ -24,7 +25,6 @@ $(function () {
 
             selectAcids.append(`<option value="${value}">${name}</option>`);
         }
-
 
 
     });
@@ -264,7 +264,24 @@ $(function () {
 
 
             }
-            console.log(xyCoordinates);
+            
+            let scatterChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Scatter Dataset',
+                        data: xyCoordinates
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: 'linear',
+                            position: 'bottom'
+                        }]
+                    }
+                }
+            });
 
         })
 

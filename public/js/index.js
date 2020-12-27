@@ -8,6 +8,7 @@ $(function () {
     let numberString = "";
     let previewElText = "";
     let initPh;
+    let plotPoints = [];
 
     //On start of page we want to get the acid names from the db
     $.ajax("/acidnames", {
@@ -193,6 +194,11 @@ $(function () {
 
         //We have acidIndex, haConc, ohConc, baseInc, haVolInit, ohFinVol
         //First need to get pH of initial solution - need pKa/Ka for this
+        //Clear the object of any past titration curves
+        for(let i=0; i< plotPoints.length; i++){
+            delete plotPoints[i];
+        }
+
         $.ajax(`/acids/${acidIndex}`, {
             type: "GET"
         }).then(function(data){
@@ -203,7 +209,58 @@ $(function () {
             regKa = data[0].Ka;
 
             //Calculate initial pH
-            initPh = log10(Math.pow((regKa*haConc), 0.5));
+            initPh = -1* log10(Math.pow((regKa*haConc), 0.5));
+            plotPoints.push(initPh);
+            
+            //Determine # of increments 
+            let numPoints = ohFinVol/baseInc;
+
+            //The initial number of moles of acid present
+            let molesAcidInit = haConc * haVolInit / 1000;
+            molesAcidInit.toFixed(6);
+            
+
+            //Iterate through each aliquot
+            for(let i=1; i<numPoints; i++){
+                //Volume of base added
+                let volOHadded = i*baseInc;
+                volOHadded = volOHadded.toFixed(2);
+                
+                //Moles of base added
+                let molesOHadded = (ohConc*volOHadded)/1000;
+                molesOHadded = molesOHadded.toFixed(6);
+
+                //Moles acid remaining
+                let molesHAremaining = molesAcidInit - molesOHadded;
+                molesHAremaining.toFixed(6);
+                
+                //While molesOH added are less than moles of acid
+                if(molesOHadded < molesAcidInit){
+                    //pH is determined by Henderson-Hasselbalch 
+                    let pHarea1 = pKa +log10(molesOHadded/molesHAremaining);
+                    pHarea1 = pHarea1.toFixed(2);
+                    plotPoints.push(pHarea1);
+                } else if (molesOHadded == molesAcidInit){
+                    let Kb = (Math.pow(10, -14))/regKa;
+                    
+                    let pHarea2 = 14 + log10(Math.pow((haConc*Kb),0.5));
+                    pHarea2 = pHarea2.toFixed(2);
+                    plotPoints.push(pHarea2);
+                } else {
+                    let excessMolesOh = molesOHadded - molesAcidInit;
+                    excessMolesOh = excessMolesOh.toFixed(6);
+
+                    haVolInit = parseFloat(haVolInit);
+                    volOHadded = parseFloat(volOHadded);
+                    let totalVolume = (haVolInit + volOHadded)/1000;
+                    
+                    let pHarea3 = 14 + log10(excessMolesOh/totalVolume);
+                    pHarea3 = pHarea3.toFixed(2);
+                    plotPoints.push(pHarea3);
+                }
+            }
+
+            console.log(plotPoints);
         })
 
     });
@@ -271,8 +328,6 @@ $(function () {
         //We have acid 
 
     }
-
-
 
     //Function definition for base 10
     function log10(val) {

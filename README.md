@@ -15,6 +15,17 @@
 ## Description: 
 A student, teacher, or researcher can generate what certain titration curves will look like under various conditions. Users also create a database of common acids.
 
+This application is deployed in <a href='https://mighty-tundra-34283.herokuapp.com/'>heroku.</a>   
+
+A user can select from acids already in the database and set reaction conditions for their titration. 
+![enter reaction conditions](./images/enter_expcond.JPG)
+
+This generates the titration curve:
+![titration curve](./images/tit_curve.JPG)
+
+If the acid is not already in the database, the user can enter it in themselves either as pKa or Ka:
+![enter acid information](./images/entering_acid.JPG)
+
 ## Installation instructions: 
 Express, mysql, chars.js are required to run this program.
 

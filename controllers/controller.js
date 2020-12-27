@@ -10,17 +10,6 @@ const router = express.Router();
 // Import the model (titration.js) to use its database functions.
 const titration = require("../models/titration.js");
 
-//When user enters a new acid, it should be added to the db
-// router.post("/newacid", function(req,res){
-//     console.log(req.body);
-//     titration.insertOneAcid([
-//         "acid_name", "pKa", "Ka"
-//     ], [
-//         req.body.acid_name, req.body.pKa, req.body.Ka
-//     ], function(result){
-//         res.json(result);
-//     })
-// });
 
 router.post("/newacid/:acidname/:pKa/:Ka", function(req,res){
     titration.insertOneAcid([

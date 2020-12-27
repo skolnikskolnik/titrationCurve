@@ -202,6 +202,10 @@ $(function () {
             }
             pKa = data[0].pKa;
             regKa = data[0].Ka;
+            let nameOfAcid = data[0].acid_name;
+            let acidNameSpan = $("#acid-name-tit");
+            acidNameSpan.empty();
+            acidNameSpan.text(nameOfAcid);
 
             //Calculate initial pH
             initPh = -1 * log10(Math.pow((regKa * haConc), 0.5));
@@ -262,14 +266,13 @@ $(function () {
                     xyCoordinates.push(xyCoordArea3);
                 }
 
-
             }
             
             let scatterChart = new Chart(ctx, {
                 type: 'scatter',
                 data: {
                     datasets: [{
-                        label: 'Scatter Dataset',
+                        label: 'pH values',
                         data: xyCoordinates
                     }]
                 },
@@ -277,7 +280,17 @@ $(function () {
                     scales: {
                         xAxes: [{
                             type: 'linear',
-                            position: 'bottom'
+                            position: 'bottom',
+                            scaleLabel:{
+                                display: true,
+                                labelString: "volume OH^- added"
+                            }
+                        }],
+                        yAxes: [{
+                            scaleLabel:{
+                                display: true,
+                                labelString: "pH"
+                            }
                         }]
                     }
                 }

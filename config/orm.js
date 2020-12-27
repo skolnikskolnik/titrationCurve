@@ -67,15 +67,6 @@ const orm = {
             cb(result);
         });
     },
-    selectWhereTwo: function (tableInput, col1, val1, col2, val2, cb) {
-        let queryString = `SELECT*FROM ${tableInput} WHERE ${col1} ="${val1}" AND ${col2} = ${val2};`;
-        connection.query(queryString, function (err, result) {
-            if (err) {
-                throw err;
-            }
-            cb(result);
-        })
-    },
     //insertOne()
     insertOne: function (table, cols, vals, cb) {
         let queryString = "INSERT INTO " + table;
@@ -113,75 +104,6 @@ const orm = {
             cb(result);
         });
     },
-    //Limit the number of updated ones to a certain number
-    updateOneLimit: function (table, objColVals, limit, condition1, condition2, condition3, cb) {
-        let queryString = "UPDATE " + table;
- 
-        queryString += " SET ";
-        queryString += objToSql(objColVals);
-        queryString += " WHERE ";
-        queryString += condition1;
-        queryString += " AND ";
-        queryString += condition2;
-        queryString += " AND ";
-        queryString += condition3;
-        queryString +=" LIMIT ";
-        queryString += limit +";"
- 
-        console.log(queryString);
-        connection.query(queryString, function (err, result) {
-            if (err) {
-                throw err;
-            }
- 
-            cb(result);
-        });
-    },
-    //Limit the number of updated ones to a certain number
-    updateOneLimit: function (table, objColVals, limit, condition1, condition2, condition3, cb) {
-        let queryString = "UPDATE " + table;
-
-        queryString += " SET ";
-        queryString += objToSql(objColVals);
-        queryString += " WHERE ";
-        queryString += condition1;
-        queryString += " AND ";
-        queryString += condition2;
-        queryString += " AND ";
-        queryString += condition3;
-        queryString +=" LIMIT ";
-        queryString += limit +";"
-
-        console.log(queryString);
-        connection.query(queryString, function (err, result) {
-            if (err) {
-                throw err;
-            }
-
-            cb(result);
-        });
-    },
-    updateOneWhere: function (table, objColVals, condition1, condition2, condition3, cb) {
-        let queryString = "UPDATE " + table;
- 
-        queryString += " SET ";
-        queryString += objToSql(objColVals);
-        queryString += " WHERE ";
-        queryString += condition1;
-        queryString += " AND ";
-        queryString += condition2;
-        queryString += " AND ";
-        queryString += condition3;
- 
-        console.log(queryString);
-        connection.query(queryString, function (err, result) {
-            if (err) {
-                throw err;
-            }
- 
-            cb(result);
-        });
-    },
     //deleteOne()
     deleteOne: function (table, condition, cb) {
         let queryString = "DELETE FROM " + table;
@@ -193,34 +115,6 @@ const orm = {
                 throw err;
             }
  
-            cb(result);
-        });
-    },
-    //Needed to create this function to add user to the users table of the database
-    createUser: function (table, cols, vals, cb) {
-        let queryString = "INSERT INTO " + table;
-        queryString += " (";
-        queryString += cols.toString();
-        queryString += ") ";
-        queryString += "VALUES (?,?,?,?);";
- 
-        connection.query(queryString, vals, function (e, result) {
-            console.log(queryString, vals)
-            if (e) {
-                throw e;
-            }
-            cb(result)
-        })
- 
-    },
-    //Make path for two conditions, plus one not condition, and a limit
-    selectWhereNot: function(table, col1, val1, col2, val2, col3, val3, limit, cb){
-        let queryString = `SELECT*FROM ${table} WHERE ${col1}=${val1} AND ${col2}=${val2} AND ${col3}!=${val3} LIMIT ${limit};`;
-        connection.query(queryString, function (err, result) {
-            console.log(queryString);
-            if (err) {
-                throw err;
-            }
             cb(result);
         });
     }

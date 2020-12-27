@@ -60,7 +60,7 @@ const orm = {
     selectWhere: function (tableInput, col, vals, cb) {
         let queryString = `SELECT * FROM ${tableInput} WHERE ${col} = "${vals}";`;
         connection.query(queryString, function (err, result) {
-            console.log(queryString, "line54 orm")
+            console.log(queryString);
             if (err) {
                 throw err;
             }

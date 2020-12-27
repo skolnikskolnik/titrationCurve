@@ -7,6 +7,7 @@ $(function () {
 
     let numberString = "";
     let previewElText = "";
+    let initPh;
 
     //On start of page we want to get the acid names from the db
     $.ajax("/acidnames", {
@@ -63,11 +64,11 @@ $(function () {
         //The acid name must be a string - we only need to check it it is blank or not
 
         if (pKaorKa == 1) {
-            //Need to take number and make it pKa
-            pKa = parseInt(numberString);
-            pKa = pKa.toFixed(2);
+            //Need to take number and make it Ka
+            pKa = parseFloat(numberString);
+            pKa = pKa.toFixed(4);
             regKa = Math.pow(10, (-1 * pKa));
-            regKa = regKa.toFixed(6);
+            regKa = regKa.toFixed(10);
 
             addAcidToDB(pKa, regKa);
         } else if (pKaorKa == 2) {
@@ -78,23 +79,23 @@ $(function () {
             //regKaSplit will have two elements if it is entered in sci notation and one element if it is in regular notation
             if (regKaSplit.length == 1) {
                 //The number was entered in regular notation
-                regKa = parseInt(regKa);
-                regKa = regKa.toFixed(6);
+                regKa = parseFloat(regKa);
+                regKa = regKa.toFixed(10);
                 pKa = -1 * log10(regKa);
-                pKa = pKa.toFixed(2);
+                pKa = pKa.toFixed(4);
 
                 addAcidToDB(pKa, regKa);
 
             } else if (regKaSplit.length == 2) {
                 let regKaNum = regKaSplit[0];
-                regKaNum = parseInt(regKaNum);
+                regKaNum = parseFloat(regKaNum);
                 let regKaPoT = regKaSplit[1];
-                regKaPot = parseInt(regKaPoT);
+                regKaPot = parseFloat(regKaPoT);
 
                 regKa = regKaNum * Math.pow(10, -1 * regKaPoT);
-                regKa = regKa.toFixed(6);
+                regKa = regKa.toFixed(10);
                 pKa = -1 * log10(regKa);
-                pKa = pKa.toFixed(2);
+                pKa = pKa.toFixed(4);
 
                 addAcidToDB(pKa, regKa);
             }
@@ -117,9 +118,14 @@ $(function () {
         //Gets index of acid from db - will need to get pKa and Ka
         let acidIndex = selectAcids.val();
 
+        //Must confirm that an acid was chosen
+        if(acidIndex =="Choose your weak acid"){
+            modal("titrationInputAcid");
+        }
+
         //Need to get [HA]
         let haWholeNumber = $("#haWhole").val();
-        haWholeNumber = parseInt(haWholeNumber);
+        haWholeNumber = parseFloat(haWholeNumber);
         let haPoT = $("#haPoT").val();
         let haConc;
         if (haPoT.includes("-")) {
@@ -132,7 +138,7 @@ $(function () {
 
         //Need to get [OH^-]
         let ohWholeNumber = $("#ohWhole").val();
-        ohWholeNumber = parseInt(ohWholeNumber);
+        ohWholeNumber = parseFloat(ohWholeNumber);
         let ohPoT = $("#ohPoT").val();
         let ohConc;
         if (ohPoT.includes("-")) {
@@ -142,6 +148,11 @@ $(function () {
             ohConc = haWholeNumber * Math.pow(10, ohPoT);
         }
         ohConc = ohConc.toFixed(6);
+        
+        //If either haConc or ohConc are not numbers, then the user must try again
+        if((isNaN(haConc))||(isNaN(ohConc))){
+            modal("pKaorKa");
+        }
 
         //Need volume increments for the base
         let volIndex = $("#baseInc").val();
@@ -161,11 +172,39 @@ $(function () {
         else if (volIndex == 5) {
             baseInc = 1;
         }
+        else{
+            modal("baseInc");
+        }
         
         //Want to get the desired final volume from user
-        let baseFinVol;
-        baseFinVol = $("#baseFinal").val();
-        
+        let haVolInit;
+        haVolInit = $("#acidInitial").val();
+        haVolInit = parseFloat(haVolInit);
+        if(isNaN(haVolInit)){
+            modal("haInitVol");
+        }
+
+        let ohFinVol;
+        ohFinVol = $("#baseFinal").val();
+        ohFinVol = parseFloat(ohFinVol);
+        if(isNaN(ohFinVol)){
+            modal("ohFinVol");
+        }
+
+        //We have acidIndex, haConc, ohConc, baseInc, haVolInit, ohFinVol
+        //First need to get pH of initial solution - need pKa/Ka for this
+        $.ajax(`/acids/${acidIndex}`, {
+            type: "GET"
+        }).then(function(data){
+            if (!data) {
+                return data;
+            }
+            pKa = data[0].pKa;
+            regKa = data[0].Ka;
+
+            //Calculate initial pH
+            initPh = log10(Math.pow((regKa*haConc), 0.5));
+        })
 
     });
 
@@ -189,6 +228,7 @@ $(function () {
                     Ka: regKa
                 }
 
+
                 $.ajax(`/newacid/${acidName}/${pKa}/${regKa}`, {
                     type: "POST",
                     data: JSON.stringify(acidInput),
@@ -204,10 +244,21 @@ $(function () {
 
     function modal(type){
         let displayText;
-        if(type=="acidName"){
+        if(type == "acidName"){
             displayText = "You must enter a valid acid name";
-        } else if(type=="pKaorKa"){
+        } else if(type == "pKaorKa"){
             displayText = "You must enter a valid pKa or Ka";
+        } else if(type == "titrationInputAcid"){
+            displayText = "You must enter an acid for your titration";
+        }
+        else if(type == "haInitVol"){
+            displayText = "You must enter a valid initial volume of HA";
+        }
+        else if(type == "ohFinVol"){
+            displayText = "You must enter a valid final volume of OH^-";
+        }
+        else if(type == "baseInc"){
+            displayText = "Please choose an increment for the base";
         }
         modalDisplay.text(displayText);
         acidModal.css("display", "block");
@@ -216,6 +267,8 @@ $(function () {
             event.preventDefault();
             acidModal.css("display", "none");
         });
+
+        //We have acid 
 
     }
 

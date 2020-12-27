@@ -11,11 +11,22 @@ const router = express.Router();
 const titration = require("../models/titration.js");
 
 //When user enters a new acid, it should be added to the db
-router.post("/newacid/:acidName/:pKa/:Ka", function(req,res){
+// router.post("/newacid", function(req,res){
+//     console.log(req.body);
+//     titration.insertOneAcid([
+//         "acid_name", "pKa", "Ka"
+//     ], [
+//         req.body.acid_name, req.body.pKa, req.body.Ka
+//     ], function(result){
+//         res.json(result);
+//     })
+// });
+
+router.post("/newacid/:acidname/:pKa/:Ka", function(req,res){
     titration.insertOneAcid([
         "acid_name", "pKa", "Ka"
     ], [
-        req.params.acidName, req.params.pKa, req.params.Ka
+        req.params.acidname, req.params.pKa, req.params.Ka
     ], function(result){
         res.json(result);
     })
@@ -26,6 +37,13 @@ router.get("/acidnames", function(req,res){
     titration.selectAll(function(data){
         res.json({titrations: data});
     });
+});
+
+router.get("/acids/:index", function(req, res){
+    let id = req.params.index;
+    titration.selectWhere("id", id, function(data){
+        res.json(data);
+    } )
 })
 
 // Export routes for server.js to use.

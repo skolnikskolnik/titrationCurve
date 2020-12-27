@@ -16,6 +16,11 @@ const titration = {
         orm.selectOneColumn(col, "acids", function(res){
             cb(res);
         })
+    },
+    selectWhere: function(col, vals, cb){
+        orm.selectWhere("acids", col, vals, function (res) {
+            cb(res);
+        })
     }
 }
 

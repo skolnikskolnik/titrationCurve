@@ -118,9 +118,14 @@
                     </select>
                 </div>
                 <div class="input-group mb-3">
-                    <label for="final-volume" class="form-label">Final volume added of base:</label>
+                    <label for="final-volume" class="form-label">Initial volume of HA:</label>
+                    <input type="text" class="form-control input-acid" aria-label="conc-whole" id="acidInitial">
+                    <span class="input-group-text">mL HA added</span>
+                </div>
+                <div class="input-group mb-3">
+                    <label for="final-volume" class="form-label">Final volume OH^-:</label>
                     <input type="text" class="form-control input-acid" aria-label="conc-whole" id="baseFinal">
-                    <span class="input-group-text">mL base added</span>
+                    <span class="input-group-text">mL OH^- added</span>
                 </div>
                 <input class="btn btn-primary submit titration-submit" type="submit" data-toggle="modal" data-target="#invalidInput"
                     value="Submit">

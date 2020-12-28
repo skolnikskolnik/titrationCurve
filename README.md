@@ -27,7 +27,7 @@ If the acid is not already in the database, the user can enter it in themselves 
 ![enter acid information](./images/entering_acid.JPG)
 
 ## Installation instructions: 
-Express, mysql, chars.js are required to run this program.
+Express, mysql, charts.js are required to run this program.
 
 ## Usage: 
 This is geared towards chemistry teachers who want to be able to easily generate titration curves to use in practice problems.

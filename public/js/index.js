@@ -71,6 +71,7 @@ $(function () {
             regKa = Math.pow(10, (-1 * pKa));
             regKa = regKa.toFixed(10);
 
+
             addAcidToDB(pKa, regKa);
         } else if (pKaorKa == 2) {
             //Need to check if regKa has characters in it or not
@@ -105,7 +106,7 @@ $(function () {
             }
 
         }
-
+        
 
         //Reset number string to zero/blank
         numberString = "";
@@ -241,6 +242,10 @@ $(function () {
                     let pHarea1 = pKa + log10(molesOHadded / molesHAremaining);
                     pHarea1 = pHarea1.toFixed(2);
 
+                    if(pHarea1=="-Infinity"){
+                        pHarea1 =initPh;
+                    }
+
                     let xyCoordArea1 = {x : volOHadded, y: pHarea1};
                     xyCoordinates.push(xyCoordArea1);
                 } else if (molesOHadded == molesAcidInit) {
@@ -266,8 +271,10 @@ $(function () {
                     xyCoordinates.push(xyCoordArea3);
                 }
 
+
             }
-            
+            console.log(xyCoordinates);
+
             let scatterChart = new Chart(ctx, {
                 type: 'scatter',
                 data: {
